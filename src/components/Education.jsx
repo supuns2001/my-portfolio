@@ -1,36 +1,40 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GraduationCap, Award, Trophy, Medal, Star, Calendar } from "lucide-react";
+import { GraduationCap, Award, Trophy, Medal, Star, Cpu, Zap, Activity } from "lucide-react";
 
 const education = [
     {
-        degree: "Bachelor of Engineering (BEng) in Software Engineering",
+        degree: "BEng in Software Engineering",
         institution: "Java Institute for Advanced Technology",
         year: "Ongoing",
+        status: "In_Progress",
         description: "Specializing in full-stack development and software architecture.",
-        color: "bg-[#7e765d]/10 border-[#7e765d]/20 text-[#7e765d]",
+        tech: ["Java", "Design Patterns", "Cloud"],
     },
     {
         degree: "Certificate in Computer Science",
         institution: "SLTCA",
         year: "Completed",
+        status: "Verified",
         description: "Foundation in computer science principles and programming.",
-        color: "bg-[#aea897]/10 border-[#aea897]/20 text-[#6b6551]",
+        tech: ["CS Fundamentals", "Algorithms"],
     },
     {
         degree: "Certificate in Graphic Design",
         institution: "SLTCA",
         year: "Completed",
+        status: "Verified",
         description: "Mastering visual communication and design tools.",
-        color: "bg-gray-100 border-gray-200 text-gray-600",
+        tech: ["UI/UX", "Adobe Suite"],
     },
     {
         degree: "Certificate in AutoCAD",
         institution: "OCCS",
         year: "Completed",
+        status: "Verified",
         description: "Technical drawing and 2D/3D modeling skills.",
-        color: "bg-[#7e765d]/5 border-[#7e765d]/10 text-[#5e5845]",
+        tech: ["CAD", "3D Modeling"],
     },
 ];
 
@@ -40,48 +44,42 @@ const activities = [
         detail: "Led U17 & U19 School Teams",
         icon: Trophy,
         size: "col-span-2 row-span-2",
-        color: "bg-[#7e765d]/10 text-[#7e765d]",
-        iconColor: "text-[#7e765d]",
+        type: "Leadership",
     },
     {
         title: "Long Jump Silver",
         detail: "2018 District Meet",
         icon: Medal,
         size: "col-span-1 row-span-1",
-        color: "bg-[#aea897]/20 text-[#6b6551]",
-        iconColor: "text-[#6b6551]",
+        type: "Athletics",
     },
     {
         title: "District Cricket",
         detail: "Inter-District Team Member",
         icon: Star,
         size: "col-span-1 row-span-1",
-        color: "bg-gray-100 text-gray-600",
-        iconColor: "text-gray-600",
+        type: "Sports",
     },
     {
         title: "House Captain",
         detail: "School Sports Meet 2019",
         icon: Award,
         size: "col-span-1 row-span-2",
-        color: "bg-[#5e5845]/10 text-[#5e5845]",
-        iconColor: "text-[#5e5845]",
+        type: "Leadership",
     },
     {
         title: "Elle Captain",
         detail: "School Team Leadership",
         icon: Trophy,
         size: "col-span-1 row-span-1",
-        color: "bg-gray-200 text-gray-700",
-        iconColor: "text-gray-700",
+        type: "Leadership",
     },
     {
         title: "Elle Runner-up",
         detail: "Inter-District Tournament",
         icon: Medal,
         size: "col-span-1 row-span-1",
-        color: "bg-[#8c8673]/20 text-[#5e5845]",
-        iconColor: "text-[#5e5845]",
+        type: "Athletics",
     },
 ];
 
@@ -91,16 +89,40 @@ const TimelineItem = ({ item, index }) => (
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ delay: index * 0.1 }}
-        className="relative pl-8 pb-12 last:pb-0 border-l-2 border-gray-200"
+        className="relative pl-8 pb-12 last:pb-0 border-l border-white/10"
     >
-        <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 bg-white ${item.color.split(" ")[1]}`} />
-        <div className={`p-6 rounded-2xl border ${item.color.split(" ")[1]} hover:shadow-lg transition-shadow bg-white`}>
-            <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 ${item.color}`}>
-                {item.year}
-            </span>
-            <h3 className="text-xl font-bold text-gray-800 mb-1">{item.degree}</h3>
-            <p className="text-gray-600 font-medium mb-2">{item.institution}</p>
-            <p className="text-gray-500 text-sm">{item.description}</p>
+        <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(0,240,255,0.5)]" />
+
+        <div className="group relative">
+            <div className="absolute inset-0 bg-primary/5 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative p-6 rounded-xl border border-white/10 bg-white/5 hover:border-primary/30 transition-all">
+                <div className="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 className="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">
+                            {item.degree}
+                        </h3>
+                        <p className="text-gray-400 text-sm font-mono">{item.institution}</p>
+                    </div>
+                    <span className={`px-2 py-1 rounded text-xs font-mono border ${item.status === "In_Progress"
+                            ? "border-yellow-500/50 text-yellow-500 bg-yellow-500/10"
+                            : "border-green-500/50 text-green-500 bg-green-500/10"
+                        }`}>
+                        {item.status}
+                    </span>
+                </div>
+
+                <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+                    {item.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                    {item.tech.map((t, i) => (
+                        <span key={i} className="text-xs font-mono text-primary/80">
+                            #{t}
+                        </span>
+                    ))}
+                </div>
+            </div>
         </div>
     </motion.div>
 );
@@ -112,18 +134,28 @@ const BentoItem = ({ item, index }) => (
         viewport={{ once: true }}
         transition={{ delay: index * 0.1 }}
         whileHover={{ scale: 1.02 }}
-        className={`${item.size} rounded-3xl p-6 ${item.color} relative overflow-hidden group cursor-default shadow-md`}
+        className={`${item.size} group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors`}
     >
-        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
-            <item.icon className="w-24 h-24" />
-        </div>
-        <div className="relative z-10 h-full flex flex-col justify-between">
-            <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm mb-4">
-                <item.icon className={`w-5 h-5 ${item.iconColor}`} />
+        {/* Background Glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+        <div className="relative z-10 h-full p-6 flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+                <div className="p-3 rounded-lg bg-white/5 border border-white/10 group-hover:border-primary/30 transition-colors">
+                    <item.icon className="w-6 h-6 text-gray-400 group-hover:text-primary transition-colors" />
+                </div>
+                <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">
+                    {item.type}
+                </span>
             </div>
+
             <div>
-                <h4 className="font-bold text-lg leading-tight mb-1">{item.title}</h4>
-                <p className="text-sm opacity-80 font-medium">{item.detail}</p>
+                <h4 className="font-bold text-white text-lg mb-1 group-hover:text-primary transition-colors">
+                    {item.title}
+                </h4>
+                <p className="text-sm text-gray-400 font-mono">
+                    {item.detail}
+                </p>
             </div>
         </div>
     </motion.div>
@@ -131,9 +163,14 @@ const BentoItem = ({ item, index }) => (
 
 export default function Education() {
     return (
-        <section id="education" className="py-32 bg-[#fdfcf8]">
-            <div className="container mx-auto px-6">
-                <div className="grid lg:grid-cols-2 gap-20">
+        <section id="education" className="py-32 bg-background relative overflow-hidden">
+            {/* Background Decorations */}
+            <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+            <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px] -z-10" />
+
+            <div className="container mx-auto px-6 relative z-10">
+                <div className="grid lg:grid-cols-2 gap-16">
+
                     {/* Education Timeline */}
                     <div>
                         <motion.div
@@ -142,14 +179,18 @@ export default function Education() {
                             viewport={{ once: true }}
                             className="mb-12"
                         >
-                            <h2 className="text-4xl font-bold mb-4 flex items-center gap-3">
-                                <span className="p-3 bg-[#7e765d]/10 rounded-2xl text-[#7e765d]">
-                                    <GraduationCap className="w-8 h-8" />
-                                </span>
-                                Education <span className="text-gray-400">Journey</span>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4">
+                                <Cpu className="w-4 h-4 text-primary" />
+                                <span className="text-xs font-mono text-primary">SYSTEM_HISTORY</span>
+                            </div>
+                            <h2 className="text-4xl font-bold mb-4 text-white">
+                                Education <span className="text-gradient">Journey</span>
                             </h2>
-                            <p className="text-gray-500 text-lg">My academic path and qualifications.</p>
+                            <p className="text-gray-400 font-mono text-sm">
+                                // Academic milestones and certifications
+                            </p>
                         </motion.div>
+
                         <div className="mt-8">
                             {education.map((edu, index) => (
                                 <TimelineItem key={index} item={edu} index={index} />
@@ -165,14 +206,18 @@ export default function Education() {
                             viewport={{ once: true }}
                             className="mb-12"
                         >
-                            <h2 className="text-4xl font-bold mb-4 flex items-center gap-3">
-                                <span className="p-3 bg-[#aea897]/10 rounded-2xl text-[#aea897]">
-                                    <Trophy className="w-8 h-8" />
-                                </span>
-                                Beyond <span className="text-gray-400">Code</span>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4">
+                                <Activity className="w-4 h-4 text-secondary" />
+                                <span className="text-xs font-mono text-secondary">EXTRA_CURRICULAR</span>
+                            </div>
+                            <h2 className="text-4xl font-bold mb-4 text-white">
+                                Beyond <span className="text-gradient">Code</span>
                             </h2>
-                            <p className="text-gray-500 text-lg">Leadership, sports, and achievements.</p>
+                            <p className="text-gray-400 font-mono text-sm">
+                                // Leadership roles and achievements unlocked
+                            </p>
                         </motion.div>
+
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[180px]">
                             {activities.map((activity, index) => (
                                 <BentoItem key={index} item={activity} index={index} />
