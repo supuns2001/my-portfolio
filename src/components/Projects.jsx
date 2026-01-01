@@ -1,4 +1,4 @@
-"use client";
+
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, ExternalLink, Folder, Code, Database, Globe, ChevronDown, ChevronUp } from "lucide-react";

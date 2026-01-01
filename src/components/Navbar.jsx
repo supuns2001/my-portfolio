@@ -1,4 +1,4 @@
-"use client";
+
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,7 +52,7 @@ export default function Navbar() {
                         href="#hero"
                         className="text-xl font-bold font-mono tracking-tighter hover:text-primary transition-colors flex items-center gap-2"
                     >
-                        <Terminal className="w-5 h-5 text-primary" />
+                        <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
                         <span className="text-foreground">Supun</span>
                         <span className="text-primary animate-pulse">_</span>
                     </a>

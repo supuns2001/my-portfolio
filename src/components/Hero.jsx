@@ -1,9 +1,9 @@
-"use client";
+
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Download, Terminal, Code, Cpu } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import Image from "next/image";
+
 
 const TypewriterText = ({ text, delay = 0 }) => {
     const [displayedText, setDisplayedText] = useState("");
@@ -147,12 +147,10 @@ export default function Hero() {
 
                             {/* Image Container */}
                             <div className="absolute inset-8 rounded-full overflow-hidden border-2 border-primary/30 shadow-[0_0_50px_rgba(0,240,255,0.2)]">
-                                <Image
+                                <img
                                     src="/hero-image.jpg"
                                     alt="Supun Sulakshana"
-                                    fill
-                                    className="object-cover hover:scale-110 transition-transform duration-700"
-                                    priority
+                                    className="object-cover hover:scale-110 transition-transform duration-700 w-full h-full absolute inset-0"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                             </div>

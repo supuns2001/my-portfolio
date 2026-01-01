@@ -1,4 +1,4 @@
-"use client";
+
 
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Linkedin, Github, Terminal, Send } from "lucide-react";

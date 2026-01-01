@@ -1,4 +1,4 @@
-"use client";
+
 
 import { motion } from "framer-motion";
 import { User, Code, Terminal, Cpu, Zap, Globe, ExternalLink } from "lucide-react";
@@ -18,7 +18,7 @@ export default function About() {
 
             <div className="container mx-auto px-6 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    
+
                     {/* Left Column: Profile Module */}
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
@@ -30,7 +30,7 @@ export default function About() {
                         <div className="relative z-10 glass p-8 rounded-2xl border border-white/10 overflow-hidden group">
                             {/* Scanning Line Animation */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-primary/50 shadow-[0_0_20px_rgba(0,240,255,0.5)] animate-scan opacity-50" />
-                            
+
                             {/* Header */}
                             <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
                                 <div className="flex items-center gap-2">

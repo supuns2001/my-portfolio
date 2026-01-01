@@ -1,4 +1,4 @@
-"use client";
+
 
 import { motion } from "framer-motion";
 import { GraduationCap, Award, Trophy, Medal, Star, Cpu, Zap, Activity } from "lucide-react";
@@ -104,8 +104,8 @@ const TimelineItem = ({ item, index }) => (
                         <p className="text-gray-400 text-sm font-mono">{item.institution}</p>
                     </div>
                     <span className={`px-2 py-1 rounded text-xs font-mono border ${item.status === "In_Progress"
-                            ? "border-yellow-500/50 text-yellow-500 bg-yellow-500/10"
-                            : "border-green-500/50 text-green-500 bg-green-500/10"
+                        ? "border-yellow-500/50 text-yellow-500 bg-yellow-500/10"
+                        : "border-green-500/50 text-green-500 bg-green-500/10"
                         }`}>
                         {item.status}
                     </span>
