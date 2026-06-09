@@ -1,7 +1,5 @@
-
-
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Download, Terminal, Code, Cpu } from "lucide-react";
+import { ArrowDown, Download, Terminal, Code } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 
 
@@ -51,7 +49,7 @@ export default function Hero() {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
             <motion.div style={{ y, opacity }} className="container mx-auto px-6 z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
                     {/* Terminal Content */}
                     <div className="order-2 lg:order-1">
                         <motion.div
@@ -127,49 +125,22 @@ export default function Hero() {
 
                     {/* Hero Image / Tech Visualization */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1 }}
                         className="order-1 lg:order-2 flex justify-center lg:justify-end relative"
                     >
-                        <div className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px]">
-                            {/* Rotating Rings */}
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-0 border border-primary/20 rounded-full border-dashed"
+                        <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[460px] aspect-[9/16] overflow-hidden">
+                            <img
+                                src="/profile-portrait.png"
+                                alt="Supun Sulakshana"
+                                className="object-cover w-full h-full mix-blend-screen transition-transform duration-700 hover:scale-105"
+                                style={{
+                                    WebkitMaskImage: "radial-gradient(50% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
+                                    maskImage: "radial-gradient(50% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
+                                    filter: "brightness(0.95) contrast(1.15)",
+                                }}
                             />
-                            <motion.div
-                                animate={{ rotate: -360 }}
-                                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-4 border border-secondary/20 rounded-full border-dotted"
-                            />
-
-                            {/* Image Container */}
-                            <div className="absolute inset-8 rounded-full overflow-hidden border-2 border-primary/30 shadow-[0_0_50px_rgba(0,240,255,0.2)]">
-                                <img
-                                    src="/hero-image.jpg"
-                                    alt="Supun Sulakshana"
-                                    className="object-cover hover:scale-110 transition-transform duration-700 w-full h-full absolute inset-0"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                            </div>
-
-                            {/* Floating Tech Icons */}
-                            <motion.div
-                                animate={{ y: [0, -20, 0] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute -right-4 top-1/4 glass p-3 rounded-xl border border-white/10"
-                            >
-                                <Cpu className="w-6 h-6 text-primary" />
-                            </motion.div>
-                            <motion.div
-                                animate={{ y: [0, 20, 0] }}
-                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                className="absolute -left-4 bottom-1/4 glass p-3 rounded-xl border border-white/10"
-                            >
-                                <Code className="w-6 h-6 text-secondary" />
-                            </motion.div>
                         </div>
                     </motion.div>
                 </div>
