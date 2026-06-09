@@ -46,7 +46,7 @@ export default function Hero() {
             <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-20" />
 
             {/* Ambient Glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 left-1/2-translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
 
             <motion.div style={{ y, opacity }} className="container mx-auto px-6 z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
