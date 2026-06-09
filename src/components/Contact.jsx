@@ -21,7 +21,7 @@ const contactInfo = [
     {
         icon: MapPin,
         label: "Base_Coordinates",
-        value: "E 22/5, Ampe, Kotiyakumbura, LK",
+        value: "E 22/5, Ampe, Kotiyakumbura.",
         href: "https://maps.google.com/?q=E 22/5, Ampe, Kotiyakumbura, Sri Lanka",
         color: "text-accent"
     },

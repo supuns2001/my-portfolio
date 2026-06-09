@@ -46,7 +46,7 @@ export default function Hero() {
             <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-20" />
 
             {/* Ambient Glow */}
-            <div className="absolute top-0 left-1/2-translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
             <motion.div style={{ y, opacity }} className="container mx-auto px-6 z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
@@ -85,7 +85,7 @@ export default function Hero() {
                                         Name: <span className="text-primary font-bold">Supun Sulakshana</span>
                                     </div>
                                     <div className="text-gray-300">
-                                        Role: <span className="text-secondary">Full-Stack Developer</span>
+                                        Role: <span className="text-purple-400">Full-Stack Developer</span>
                                     </div>
                                     <div className="text-gray-300">
                                         Status: <span className="text-accent animate-pulse">● Online</span>
@@ -136,8 +136,8 @@ export default function Hero() {
                                 alt="Supun Sulakshana"
                                 className="object-cover w-full h-full mix-blend-screen transition-transform duration-700 hover:scale-105"
                                 style={{
-                                    WebkitMaskImage: "radial-gradient(50% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
-                                    maskImage: "radial-gradient(50% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
+                                    WebkitMaskImage: "radial-gradient(45% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
+                                    maskImage: "radial-gradient(45% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
                                     filter: "brightness(0.95) contrast(1.15)",
                                 }}
                             />
