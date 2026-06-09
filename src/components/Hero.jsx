@@ -128,7 +128,7 @@ export default function Hero() {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1 }}
-                        className="order-1 lg:order-2 flex justify-center lg:justify-end relative"
+                        className="hidden lg:flex order-1 lg:order-2 justify-center lg:justify-end relative"
                     >
                         <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[460px] aspect-[9/16] overflow-hidden">
                             <img
