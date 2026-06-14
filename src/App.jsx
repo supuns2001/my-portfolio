@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
 
 // Components
 import Navbar from "@/components/Navbar";
@@ -16,7 +17,7 @@ import CommandPalette from "@/components/CommandPalette";
 
 function Home() {
     return (
-        <main className="min-h-screen bg-white">
+        <main className="min-h-screen bg-background text-foreground">
             <Navbar />
             <Hero />
             <About />
@@ -40,6 +41,18 @@ function App() {
             <SmoothScroll />
             <Cursor />
             <CommandPalette />
+            <Toaster
+                position="bottom-right"
+                toastOptions={{
+                    style: {
+                        background: '#171717',
+                        color: '#ededed',
+                        border: '1px solid rgba(0,240,255,0.2)',
+                        fontFamily: 'monospace',
+                        fontSize: '14px',
+                    },
+                }}
+            />
 
             <Routes>
                 <Route path="/" element={<Home />} />
