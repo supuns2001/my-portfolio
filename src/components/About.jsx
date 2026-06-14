@@ -1,4 +1,21 @@
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+
+const handleCVDownload = async () => {
+    try {
+        const res = await fetch("/cv.pdf", { method: "HEAD" });
+        if (res.ok) {
+            window.open("/cv.pdf", "_blank");
+        } else {
+            toast("CV is being updated! Check LinkedIn for now 🚀", {
+                icon: "📄",
+                duration: 4000,
+            });
+        }
+    } catch {
+        toast.error("Something went wrong. Please try again.");
+    }
+};
 import { Terminal, Code, Cpu, Command, ExternalLink } from "lucide-react";
 
 const skillCategories = [
@@ -94,15 +111,15 @@ export default function About() {
 
                         {/* CV Download button */}
                         <div>
-                            <motion.a
-                                href="/cv.pdf"
+                            <motion.button
+                                onClick={handleCVDownload}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/50 rounded-lg text-white font-mono transition-all group"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/50 rounded-lg text-white font-mono transition-all group cursor-pointer"
                             >
                                 <ExternalLink className="w-4 h-4 group-hover:text-primary transition-colors" />
                                 <span>Download_Data_Log</span>
-                            </motion.a>
+                            </motion.button>
                         </div>
                     </motion.div>
 
