@@ -1,27 +1,111 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Download, Terminal, Code } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
+// ─── Sequential Terminal Component ───────────────────────────────────────────
+// Properly cleans up all intervals/timeouts on unmount. Types commands one by
+// one, reveals output, then loops back after a short pause.
+const terminalCommands = [
+    { prompt: "$ whoami",         output: "supun-sulakshana" },
+    { prompt: "$ cat skills.txt", output: "React · Node · Flutter · Docker · AWS" },
+    { prompt: "$ echo $STATUS",   output: "Available for opportunities ✓" },
+];
 
-const TypewriterText = ({ text, delay = 0 }) => {
-    const [displayedText, setDisplayedText] = useState("");
+const SequentialTerminal = () => {
+    const [lines, setLines] = useState([]);
+    const [currentCmd, setCurrentCmd] = useState(0);
+    const [phase, setPhase] = useState("typing"); // "typing" | "revealing" | "pausing"
+    const [typedText, setTypedText] = useState("");
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
+        const timers = [];
+        const cmd = terminalCommands[currentCmd];
+
+        if (phase === "typing") {
             let i = 0;
             const interval = setInterval(() => {
-                setDisplayedText(text.substring(0, i + 1));
                 i++;
-                if (i > text.length) clearInterval(interval);
-            }, 50);
-            return () => clearInterval(interval);
-        }, delay);
-        return () => clearTimeout(timeout);
-    }, [text, delay]);
+                setTypedText(cmd.prompt.substring(0, i));
+                if (i >= cmd.prompt.length) {
+                    clearInterval(interval);
+                    const t = setTimeout(() => setPhase("revealing"), 300);
+                    timers.push(t);
+                }
+            }, 45);
+            timers.push(interval);
+        }
 
-    return <span>{displayedText}</span>;
+        if (phase === "revealing") {
+            const t = setTimeout(() => {
+                setLines(prev => [...prev, { prompt: cmd.prompt, output: cmd.output }]);
+                setTypedText("");
+                setPhase("pausing");
+            }, 200);
+            timers.push(t);
+        }
+
+        if (phase === "pausing") {
+            const t = setTimeout(() => {
+                const next = (currentCmd + 1) % terminalCommands.length;
+                if (next === 0) setLines([]); // reset on loop
+                setCurrentCmd(next);
+                setPhase("typing");
+            }, 1200);
+            timers.push(t);
+        }
+
+        return () => timers.forEach(t => {
+            clearInterval(t);
+            clearTimeout(t);
+        });
+    }, [phase, currentCmd]);
+
+    return (
+        <div className="space-y-2">
+            {/* Already completed lines */}
+            {lines.map((line, idx) => (
+                <div key={idx} className="space-y-1">
+                    <div className="flex gap-2">
+                        <span className="text-green-400">➜</span>
+                        <span className="text-blue-400">~</span>
+                        <span className="text-gray-400">{line.prompt}</span>
+                    </div>
+                    <div className="pl-4 text-accent font-mono text-sm">{line.output}</div>
+                </div>
+            ))}
+
+            {/* Currently typing line */}
+            <div className="flex gap-2">
+                <span className="text-green-400">➜</span>
+                <span className="text-blue-400">~</span>
+                <span className="text-gray-400">
+                    {typedText}
+                    <span className="animate-pulse text-primary">▌</span>
+                </span>
+            </div>
+        </div>
+    );
 };
 
+// ─── Smart CV Download ────────────────────────────────────────────────────────
+const handleCVDownload = async () => {
+    try {
+        const res = await fetch("/cv.pdf", { method: "HEAD" });
+        if (res.ok) {
+            window.open("/cv.pdf", "_blank");
+        } else {
+            toast("CV is being updated! Check LinkedIn for now 🚀", {
+                icon: "📄",
+                duration: 4000,
+            });
+        }
+    } catch {
+        toast.error("Something went wrong. Please try again.");
+    }
+};
+
+// ─── Hero Component ───────────────────────────────────────────────────────────
 export default function Hero() {
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -32,8 +116,32 @@ export default function Hero() {
     const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-    const scrollToProjects = () => {
-        document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+    // ── Easter Egg: ↑↑↓↓ ──────────────────────────────────────────────────
+    const [easterEgg, setEasterEgg] = useState(false);
+    useEffect(() => {
+        const sequence = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown"];
+        const pressed = [];
+        const handler = (e) => {
+            pressed.push(e.key);
+            if (pressed.length > sequence.length) pressed.shift();
+            if (pressed.join(",") === sequence.join(",")) {
+                setEasterEgg(true);
+                setTimeout(() => setEasterEgg(false), 5000);
+            }
+        };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    }, []);
+
+    // ── Robust scroll ──────────────────────────────────────────────────────
+    const scrollToSection = (id) => {
+        const el = document.querySelector(`#${id}`);
+        if (!el) return;
+        const offset = 80;
+        window.scrollTo({
+            top: el.getBoundingClientRect().top + window.scrollY - offset,
+            behavior: "smooth",
+        });
     };
 
     return (
@@ -45,13 +153,35 @@ export default function Hero() {
             {/* Tech Grid Background */}
             <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-20" />
 
+            {/* Mobile-only: profile image ghost in main hero background */}
+            <div className="lg:hidden absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                <img
+                    src="/profile-portrait.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute w-full h-full object-cover"
+                    style={{
+                        objectPosition: "center 10%",
+                        opacity: 0.12,
+                        maskImage: "radial-gradient(ellipse 80% 70% at 50% 30%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0) 100%)",
+                        WebkitMaskImage: "radial-gradient(ellipse 80% 70% at 50% 30%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0) 100%)",
+                        filter: "brightness(1.4) contrast(1.0) saturate(0.4)",
+                    }}
+                />
+                {/* Cyan edge glow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-transparent to-transparent" />
+            </div>
+
             {/* Ambient Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
             <motion.div style={{ y, opacity }} className="container mx-auto px-6 z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-                    {/* Terminal Content */}
+
+                    {/* ── Left: Terminal Content ── */}
                     <div className="order-2 lg:order-1">
+
+                        {/* Terminal Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -71,59 +201,93 @@ export default function Hero() {
 
                             {/* Terminal Body */}
                             <div className="p-6 md:p-8 font-mono text-sm md:text-base space-y-4">
-                                <div className="flex gap-2">
-                                    <span className="text-green-400">➜</span>
-                                    <span className="text-blue-400">~</span>
-                                    <span className="text-gray-400">$ init portfolio</span>
-                                </div>
-
+                                {/* Static profile info */}
                                 <div className="pl-4 space-y-2">
                                     <div className="text-gray-300">
-                                        Loading developer profile... <span className="text-green-400">Done</span>
+                                        Loading developer profile...{" "}
+                                        <span className="text-green-400">Done</span>
                                     </div>
                                     <div className="text-gray-300">
-                                        Name: <span className="text-primary font-bold">Supun Sulakshana</span>
+                                        Name:{" "}
+                                        <span className="text-primary font-bold">
+                                            Supun Sulakshana
+                                        </span>
                                     </div>
                                     <div className="text-gray-300">
-                                        Role: <span className="text-purple-400">Full-Stack Developer</span>
+                                        Role:{" "}
+                                        <span className="text-purple-400">
+                                            Full-Stack Developer
+                                        </span>
                                     </div>
                                     <div className="text-gray-300">
-                                        Status: <span className="text-accent animate-pulse">● Online</span>
+                                        Status:{" "}
+                                        <span className="text-accent animate-pulse">
+                                            ● Online
+                                        </span>
                                     </div>
                                 </div>
 
-                                <div className="flex gap-2 pt-4">
-                                    <span className="text-green-400">➜</span>
-                                    <span className="text-blue-400">~</span>
-                                    <span className="text-gray-400">$ <TypewriterText text="echo 'Building the future, one line of code at a time.'" delay={1000} /><span className="animate-pulse">_</span></span>
-                                </div>
+                                {/* Divider */}
+                                <div className="border-t border-white/5" />
+
+                                {/* Sequential typewriter commands */}
+                                <SequentialTerminal />
+
+                                {/* Easter Egg line */}
+                                {easterEgg && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 4 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="pl-4 space-y-1"
+                                    >
+                                        <div className="text-yellow-400 font-mono text-sm">
+                                            $ sudo hire supun --immediately
+                                        </div>
+                                        <div className="text-accent font-mono text-sm">
+                                            ✓ Request submitted to the universe... 🚀
+                                        </div>
+                                    </motion.div>
+                                )}
                             </div>
                         </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 2.5, duration: 0.5 }}
-                            className="mt-8 flex flex-col sm:flex-row gap-4"
-                        >
-                            <button
-                                onClick={scrollToProjects}
-                                className="px-8 py-3 bg-primary text-black rounded-lg font-mono font-bold hover:bg-primary/90 transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:shadow-[0_0_30px_rgba(0,240,255,0.5)]"
+                        {/* CTA Buttons — staggered spring entrance */}
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                            <motion.button
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+                                whileHover={{
+                                    scale: 1.05,
+                                    boxShadow: "0 0 30px rgba(0,240,255,0.55)",
+                                }}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={() => scrollToSection("projects")}
+                                className="px-8 py-3 bg-primary text-black rounded-lg font-mono font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] cursor-pointer"
                             >
                                 <Code className="w-4 h-4" />
                                 View_Projects
-                            </button>
-                            <a
-                                href="/cv.pdf"
-                                className="px-8 py-3 glass text-white rounded-lg font-mono font-medium hover:bg-white/10 transition-all flex items-center justify-center gap-2 border border-white/10 hover:border-primary/50"
+                            </motion.button>
+
+                            <motion.button
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 1.4, type: "spring", stiffness: 200 }}
+                                whileHover={{
+                                    scale: 1.03,
+                                    borderColor: "rgba(0,240,255,0.5)",
+                                }}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={handleCVDownload}
+                                className="px-8 py-3 glass text-white rounded-lg font-mono font-medium hover:bg-white/10 transition-all flex items-center justify-center gap-2 border border-white/10 cursor-pointer"
                             >
                                 <Download className="w-4 h-4" />
                                 Download_CV
-                            </a>
-                        </motion.div>
+                            </motion.button>
+                        </div>
                     </div>
 
-                    {/* Hero Image / Tech Visualization */}
+                    {/* ── Right: Desktop Profile Image ── */}
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -136,8 +300,10 @@ export default function Hero() {
                                 alt="Supun Sulakshana"
                                 className="object-cover w-full h-full mix-blend-screen transition-transform duration-700 hover:scale-105"
                                 style={{
-                                    WebkitMaskImage: "radial-gradient(45% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
-                                    maskImage: "radial-gradient(45% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
+                                    WebkitMaskImage:
+                                        "radial-gradient(45% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
+                                    maskImage:
+                                        "radial-gradient(45% 60% at 58% 38%, rgba(0,0,0,1) 25%, rgba(0,0,0,0) 100%)",
                                     filter: "brightness(0.95) contrast(1.15)",
                                 }}
                             />
@@ -150,8 +316,9 @@ export default function Hero() {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 3, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce"
+                transition={{ delay: 2.2, duration: 1 }}
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer"
+                onClick={() => scrollToSection("about")}
             >
                 <ArrowDown className="w-6 h-6 text-primary" />
             </motion.div>
